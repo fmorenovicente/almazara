@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aceites La Oliva Dorada - Almazara Familiar</title>
+    
+    <style>
+        /* --- Estilos Generales --- */
+        body {
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        /* --- Carrusel (Slider) CSS --- */
+        .slider-container {
+            position: relative;
+            height: 400px; /* Altura del carrusel */
+            overflow: hidden; 
+        }
+        .slider-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover; 
+            background-position: center;
+            position: absolute; 
+            opacity: 0; 
+            transition: opacity 1.5s ease-in-out; /* Animación de transición */
+        }
+        .slider-image:first-child {
+            opacity: 1; 
+        }
+
+        /* Estilo para el texto superpuesto en el carrusel */
+        header {
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            z-index: 10; 
+            background: rgba(0,0,0,0.4); 
+            padding: 15px 30px; 
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+        header h1 { font-size: 2.8em; margin: 0; letter-spacing: 2px; }
+        header p { margin-top: 5px; font-style: normal; font-size: 1.1em; }
+
+        /* --- Estilos de las Secciones de Contenido --- */
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .section h2 {
+            color: #88aa2e; 
+            border-bottom: 3px solid #88aa2e;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .info-list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+        }
+        .info-list li { text-align: center; width: 30%; padding: 10px; }
+        .info-list strong { display: block; font-size: 1.2em; color: #2e6027; margin-bottom: 5px; }
+        
+        /* --- Estilos Formulario de Sorteo --- */
+        #formulario-sorteo { text-align: center; padding: 20px 0; }
+        #numero-sorteo { padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; width: 100px; text-align: center; }
+        #formulario-sorteo button { background-color: #88aa2e; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-left: 15px; transition: background-color 0.3s; }
+        #formulario-sorteo button:hover { background-color: #2e6027; }
+        #resultado-sorteo { margin-top: 20px; font-weight: bold; text-align: center; }
+
+        /* --- Estilos para la sección de Equipo --- */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px; 
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .team-member {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .member-photo {
+            width: 150px; 
+            height: 150px;
+            object-fit: cover; 
+            border-radius: 50%; 
+            border: 4px solid #88aa2e; 
+            margin-bottom: 15px;
+        }
+        .team-member h3 { color: #2e6027; margin: 5px 0; }
+        .team-member .role { font-style: italic; color: #555; margin-bottom: 10px; }
+        
+        /* Media Query para móvil: apilar las tarjetas en una columna */
+        @media (max-width: 768px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #555;
+            color: white;
+            font-size: 0.9em;
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- LÓGICA DEL CARRUSEL ---
+            const slides = document.querySelectorAll('.slider-image');
+            let currentSlide = 0;
+
+            function nextSlide() {
+                slides[currentSlide].style.opacity = 0;
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].style.opacity = 1;
+            }
+            setInterval(nextSlide, 5000); 
+
+            // --- LÓGICA DEL SORTEO ---
+            const formularioSorteo = document.getElementById('formulario-sorteo');
+            const inputNumero = document.getElementById('numero-sorteo');
+            const resultadoParrafo = document.getElementById('resultado-sorteo');
+            const NUMERO_GANADOR = 999;
+
+            formularioSorteo.addEventListener('submit', function(event) {
+                event.preventDefault(); 
+                resultadoParrafo.style.color = '#333';
+                
+                const numeroElegido = parseInt(inputNumero.value);
+
+                if (isNaN(numeroElegido) || numeroElegido < 1 || numeroElegido > 1000) {
+                    resultadoParrafo.textContent = '⛔ Por favor, introduce un número válido entre 1 y 1000.';
+                    resultadoParrafo.style.color = '#cc0000';
+                    return;
+                }
+
+                if (numeroElegido === NUMERO_GANADOR) {
+                    resultadoParrafo.textContent = '🥳 ¡FELICIDADES! ¡Has acertado el número ganador!';
+                    resultadoParrafo.style.color = '#2e6027';
+                } else {
+                    resultadoParrafo.textContent = `😕 Lo sentimos, el número ${numeroElegido} no es el ganador. ¡Sigue participando!`;
+                    resultadoParrafo.style.color = '#88aa2e';
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="slider-container">
+        <div class="slider-image" style="background-image: url('olivo1.jpg');"></div>
+        <div class="slider-image" style="background-image: url('olivo2.jpg');"></div>
+        <div class="slider-image" style="background-image: url('olivo3.jpg');"></div>
+        
+        <header>
+            <h1>Aceites La Oliva Dorada</h1>
+            <p>El Sabor Auténtico de la Sierra de [Provincia]</p>
+        </header>
+    </div>
+
+    <div class="container">
+        
+        <section class="section">
+            <h2>📜 Historia y Tradición</h2>
+            <p>
+                En **"La Oliva Dorada"** conjugamos la experiencia de tres generaciones con las técnicas de **prensado en frío** más modernas. Nuestro compromiso es simple: calidad desde el olivo hasta su mesa. Cultivamos nuestras aceitunas en [Tipo de Tierra], lo que confiere a nuestro AOVE un carácter único y un bajo nivel de acidez.
+            </p>
+            <ul class="info-list">
+                <li><strong>⭐ 3 Generaciones</strong><br>Experiencia familiar</li>
+                <li><strong>🌡️ Prensado en Frío</strong><br>Máxima calidad nutricional</li>
+                <li><strong>📍 DOP [Nombre]</strong><br>Denominación de Origen</li>
+            </ul>
+        </section>
+
+        <section class="section" id="sorteo">
+            <h2>🎉 Participa en Nuestro Sorteo</h2>
+            <p>Introduce tu número de la suerte (entre 1 y 1000) para optar a un lote de nuestros mejores AOVEs. ¡El número ganador es el **999**!</p>
+            
+            <form id="formulario-sorteo">
+                <label for="numero-sorteo">Tu Número:</label>
+                <input type="number" id="numero-sorteo" name="numero-sorteo" min="1" max="1000" required>
+                <button type="submit">
+                    ¡Comprobar!
+                </button>
+            </form>
+            
+            <p id="resultado-sorteo"></p>
+        </section>
+
+        <section class="section" id="equipo">
+            <h2>🤝 Nuestro Equipo Familiar</h2>
+            <p>Conoce a las personas que hacen posible la calidad de Aceites La Oliva Dorada, de la tierra a tu mesa.</p>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="empleado_placeholder.jpg" alt="Foto de Juan García" class="member-photo">
+                    <h3>Juan García</h3>
+                    <p class="role">Maestro Almazarero</p>
+                    <p class="description">Experto en prensado en frío y responsable de la calidad del AOVE.</p>
+                </div>
+                
+                <div class="team-member">
+                    <img src="empleado_placeholder.jpg" alt="Foto de Juan García" class="member-photo">
+                    <h3>Juan García</h3>
+                    <p class="role">Maestro Almazarero</p>
+                    <p class="description">Experto en prensado en frío y responsable de la calidad del AOVE.</p>
+                </div><div class="team-member">
+                    <img src="empleado_placeholder.jpg" alt="Foto de Juan García" class="member-photo">
+                    <h3>Juan García</h3>
+                    <p class="role">Maestro Almazarero</p>
+                    <p class="description">Experto en prensado en frío y responsable de la calidad del AOVE.</p>
+                </div>
+            </div>
+        </section>
